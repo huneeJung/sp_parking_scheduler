@@ -1,4 +1,4 @@
-package com.parking.smart.sp_parking_scheduler.biz.scheduler;
+package com.parking.smart.sp_parking_scheduler.biz.parking.scheduler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +39,8 @@ public class ParkingLotSyncScheduler {
     private String dataType;
     @Value("${parking.openapi.service}")
     private String service;
+    @Value("${parking.insert.batch.flag:100}")
+    private Integer insertBatchFlag;
 
     // 매일 새벽 3시에 실행
 //    @Scheduled(cron = "0 0 3 * * *")
@@ -88,9 +90,9 @@ public class ParkingLotSyncScheduler {
 
     public void updateParkingLots(List<ParkingInfo> parkingInfoList) {
 
-        List<ParkingLot> updateParkingLotList = new ArrayList<>();
-        List<ParkingLotDetail> updateParkingLotDetailList = new ArrayList<>();
-        List<ParkingLotPrice> updateParkingLotPriceList = new ArrayList<>();
+        List<ParkingLot> updateLotList = new ArrayList<>();
+        List<ParkingLotDetail> updateLotDetailList = new ArrayList<>();
+        List<ParkingLotPrice> updateLotPriceList = new ArrayList<>();
 
         // 공영주차장 OpenAPI 동기화할 목록 1000건 Select
         Set<String> insertTargets = new HashSet<>(1000);
@@ -99,7 +101,7 @@ public class ParkingLotSyncScheduler {
         }
         var selectedParkingLots = parkingLotService.findAnyByCodes(insertTargets);
 
-        // Select 한 1000건의 ROW , PK로
+        // UpdateTarget , InsertTarget 데이터 분기
         Map<String, ParkingLot> updateTargets = new HashMap<>();
         for (ParkingLot parkingLot : selectedParkingLots) {
             var id = parkingLot.getCode();
@@ -107,65 +109,88 @@ public class ParkingLotSyncScheduler {
             insertTargets.remove(id);
         }
 
-        List<ParkingLot> insertParkingLotList = null;
-        List<ParkingLotDetail> insertParkingLotDetailList = null;
-        List<ParkingLotPrice> insertParkingLotPriceList = null;
+        List<ParkingLot> insertLotList = null;
+        List<ParkingLotDetail> insertLotDetailList = null;
+        List<ParkingLotPrice> insertLotPriceList = null;
 
         boolean insertBatchMode = false;
-        // insertTarget 100건 이상이면 Insert 배치 모드
-        if (insertTargets.size() >= 100) {
+        // insertTarget 설정값 이상 건수이면 Insert 배치 모드
+        // Update 의 경우에는 항상 배치 모드
+        // UpdateTarget 에서 기본/세부/가격 정보에 변경사항이 있는지 검증 후 업데이트하므로 사전에 몇건을 업데이트 할 것인지 확인 불가
+        if (insertTargets.size() >= insertBatchFlag) {
             insertBatchMode = true;
-            insertParkingLotList = new ArrayList<>();
-            insertParkingLotDetailList = new ArrayList<>();
-            insertParkingLotPriceList = new ArrayList<>();
+            insertLotList = new ArrayList<>();
+            insertLotDetailList = new ArrayList<>();
+            insertLotPriceList = new ArrayList<>();
         }
 
         for (ParkingInfo parkingInfo : parkingInfoList) {
             var id = parkingInfo.getCode();
+            // InsertTarget 인 경우
             if (insertTargets.contains(id)) {
                 // ParkingLot Insert
                 if (insertBatchMode) {
                     // ParkingLot Insert 배치 목록 추가
                     var insertParkingLot = parkingInfo.toParkingLot();
                     insertParkingLot.setCode(id);
-                    insertParkingLotList.add(insertParkingLot);
+                    insertLotList.add(insertParkingLot);
                     // ParkingLotDetail Insert 배치 목록 추가
                     var insertParkingLotDetail = parkingInfo.toParkingLotDetail();
-                    insertParkingLotDetail.setParkingLot(insertParkingLot);
-                    insertParkingLotDetailList.add(insertParkingLotDetail);
+                    insertParkingLotDetail.setCode(id);
+                    insertLotDetailList.add(insertParkingLotDetail);
                     // ParkingLotPrice Insert 배치 목록 추가
                     var insertParkingLotPrice = parkingInfo.toParkingLotPrice();
-                    insertParkingLotPrice.setParkingLot(insertParkingLot);
-                    insertParkingLotPriceList.add(insertParkingLotPrice);
+                    insertParkingLotPrice.setCode(id);
+                    insertLotPriceList.add(insertParkingLotPrice);
                 } else {
+                    log.info("New ParkingLot Insert ::: parkingCode {}", parkingInfo.getCode());
                     parkingLotService.insertParkingLot(parkingInfo);
                 }
-            } else {
-                // ParkingLot Update 배치 목록 추가
+                // API 요청 데이터에 중복 데이터가 존재하므로 한번 추가된 데이터는 중복 추가 못하도록 삭제 처리
+                insertTargets.remove(id);
+            }
+            // UpdateTarget 인 경우
+            else if (updateTargets.get(id) != null) {
                 var selectedParkingLot = updateTargets.get(id);
+                // ParkingLot Update 배치 목록 추가
                 var updateParkingLot = parkingInfo.toParkingLot();
                 if (!selectedParkingLot.equals(updateParkingLot)) {
-                    updateParkingLotList.add(updateParkingLot);
+                    updateLotList.add(updateParkingLot);
                 }
                 // ParkingLotDetail Update 배치 목록 추가
                 var parkingLotDetail = selectedParkingLot.getParkingLotDetail();
                 var updateParkingLotDetail = parkingInfo.toParkingLotDetail();
                 if (!parkingLotDetail.equals(updateParkingLotDetail)) {
-                    updateParkingLotDetailList.add(updateParkingLotDetail);
+                    updateLotDetailList.add(updateParkingLotDetail);
                 }
                 // ParkingLotPrice Update 배치 목록 추가
                 var parkingLotPrice = selectedParkingLot.getParkingLotPrice();
                 var updateParkingLotPrice = parkingInfo.toParkingLotPrice();
                 if (!parkingLotPrice.equals(updateParkingLotPrice)) {
-                    updateParkingLotPriceList.add(updateParkingLotPrice);
+                    updateLotPriceList.add(updateParkingLotPrice);
                 }
             }
         }
 
-        // 타겟 배치 처리
-        parkingLotService.updateBatch(updateParkingLotList, updateParkingLotDetailList, updateParkingLotPriceList);
+        // 변동된 정보가 존재하는 경우 테이블별로 배치 Update
+        if (!updateLotList.isEmpty()) {
+            parkingLotService.updateParkingLotBatch(updateLotList);
+            log.info("ParkingLot Batch Updated ::: updateLotList size {}", updateLotList.size());
+        }
+        if (!updateLotDetailList.isEmpty()) {
+            parkingLotService.updateParkingLotDetailBatch(updateLotDetailList);
+            log.info("ParkingLotDetail Batch Updated ::: updateLotDetailList size {}", updateLotDetailList.size());
+        }
+        if (!updateLotPriceList.isEmpty()) {
+            parkingLotService.updateParkLotPriceBatch(updateLotPriceList);
+            log.info("ParkingLotPrice Batch Updated ::: updateLotPriceList size {}", updateLotPriceList.size());
+        }
+        // 신규 공영 주차장 정보 Insert
         if (insertBatchMode) {
-            parkingLotService.insertBatch(insertParkingLotList, insertParkingLotDetailList, insertParkingLotPriceList);
+            parkingLotService.insertBatch(insertLotList, insertLotDetailList, insertLotPriceList);
+            log.info("ParkingLot Batch Inserted ::: insertLotList size {}", insertLotList.size());
+            log.info("ParkingLotDetail Batch Inserted ::: insertLotDetailList size {}", insertLotDetailList.size());
+            log.info("ParkingLotPrice Batch Inserted ::: insertLotPriceList size {}", insertLotPriceList.size());
         }
     }
 

@@ -16,6 +16,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static java.math.BigDecimal.ZERO;
+
 @Slf4j
 @Getter
 @Setter
@@ -136,16 +138,18 @@ public class ParkingInfo {
                 .lastSync(syncTime)
                 .realTimeInfo(queStatus)
                 .realTimeInfoDescription(queStatusNm)
-                .isFree(StringUtils.isBlank(free) ? null : this.free.equals("Y"))
-                .isNightFree(StringUtils.isBlank(nightFree) ? null : nightFree.equals("Y"))
+                .isFree(!StringUtils.isBlank(free) && this.free.equals("Y"))
+                .isNightFree(!StringUtils.isBlank(nightFree) && nightFree.equals("Y"))
                 .nightOpen(nightFreeNm)
-                .weekendFree(StringUtils.isBlank(weekendFree) ? null : weekendFree.equals("Y"))
-                .holidayFree(StringUtils.isBlank(holidayFree) ? null : holidayFree.equals("Y"))
+                .weekendFree(!StringUtils.isBlank(weekendFree) && weekendFree.equals("Y"))
+                .holidayFree(!StringUtils.isBlank(holidayFree) && holidayFree.equals("Y"))
                 .build();
     }
 
     public ParkingLotDetail toParkingLotDetail() {
         return ParkingLotDetail.builder()
+                .code(code)
+                .typeCode(typeCode)
                 .typeName(typeName)
                 .operationCode(operationCode)
                 .operationName(operationName)
@@ -155,19 +159,20 @@ public class ParkingInfo {
                 .weekendClose(weekendClose)
                 .holidayOpen(holidayOpen)
                 .holidayClose(holidayClose)
-                .latitude(StringUtils.isBlank(lat) ? null : new BigDecimal(lat))
-                .longitude(StringUtils.isBlank(lng) ? null : new BigDecimal(lng))
+                .latitude(StringUtils.isBlank(lat) ? ZERO : new BigDecimal(lat))
+                .longitude(StringUtils.isBlank(lng) ? ZERO : new BigDecimal(lng))
                 .build();
     }
 
     public ParkingLotPrice toParkingLotPrice() {
         return ParkingLotPrice.builder()
+                .code(code)
                 .unitMinute(basicParkingTime)
-                .unitPrice(StringUtils.isBlank(basicParkingPrice) ? null : new BigDecimal(basicParkingPrice))
+                .unitPrice(StringUtils.isBlank(basicParkingPrice) ? ZERO : new BigDecimal(basicParkingPrice))
                 .extraMinute(additionalParkingTime)
-                .extraPrice(StringUtils.isBlank(additionalParkingPrice) ? null : new BigDecimal(additionalParkingPrice))
-                .dailyMaxPrice(StringUtils.isBlank(dailyMaxAmt) ? null : new BigDecimal(dailyMaxAmt))
-                .monthlyPassPrice(StringUtils.isBlank(monthlyPassPrice) ? null : new BigDecimal(monthlyPassPrice))
+                .extraPrice(StringUtils.isBlank(additionalParkingPrice) ? ZERO : new BigDecimal(additionalParkingPrice))
+                .dailyMaxPrice(StringUtils.isBlank(dailyMaxAmt) ? ZERO : new BigDecimal(dailyMaxAmt))
+                .monthlyPassPrice(StringUtils.isBlank(monthlyPassPrice) ? ZERO : new BigDecimal(monthlyPassPrice))
                 .build();
     }
 

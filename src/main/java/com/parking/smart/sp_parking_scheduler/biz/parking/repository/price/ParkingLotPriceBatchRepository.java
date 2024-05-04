@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ParkingLotPriceBatchRepository {
 
+    // JPA 배치보다 빠른 속도로 처리 가능
     private final JdbcTemplate jdbcTemplate;
 
     public void batchInsert(List<ParkingLotPrice> batchList) {
@@ -70,6 +71,6 @@ public class ParkingLotPriceBatchRepository {
         ps.setBigDecimal(4, parkingLotPrice.getExtraPrice());
         ps.setBigDecimal(5, parkingLotPrice.getDailyMaxPrice());
         ps.setBigDecimal(6, parkingLotPrice.getMonthlyPassPrice());
-        ps.setString(7, parkingLotPrice.getParkingLot().getCode());
+        ps.setString(7, parkingLotPrice.getCode());
     }
 }

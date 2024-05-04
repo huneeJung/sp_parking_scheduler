@@ -1,4 +1,4 @@
-package com.parking.smart.sp_parking_scheduler.biz.parking.repository.lot;
+package com.parking.smart.sp_parking_scheduler.biz.parking.repository;
 
 import com.parking.smart.sp_parking_scheduler.biz.parking.entity.ParkingLot;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ParkingLotBatchRepository {
 
+    // JPA 배치보다 빠른 속도로 처리 가능
     private final JdbcTemplate jdbcTemplate;
 
     public void batchInsert(List<ParkingLot> batchList) {

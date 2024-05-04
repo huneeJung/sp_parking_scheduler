@@ -18,12 +18,12 @@ spring:
   jpa:
     open-in-view: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    show-sql: true
+    show-sql: false
     properties:
-      hibernate.format_sql: true
+      hibernate.format_sql: false
       dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
 ## Tomcat
@@ -44,6 +44,9 @@ parking:
     key: ENC(9nnh9Hl/CDacvhOcndqPMYgRXVoJ73zsGWdwEP89BWkBGw32L052NQ==)
     type: json
     service: GetParkInfo
+  insert:
+    batch:
+      flag: 100
 
 ## ???
 jasypt:

@@ -22,7 +22,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "PARKING_LOT")
 public class ParkingLot extends CommonEntity {
 
-    @Column(name = "CODE")
+    @Column(name = "CODE", unique = true)
     private String code;
 
     @Column(name = "NAME")
@@ -69,7 +69,12 @@ public class ParkingLot extends CommonEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ParkingLot that = (ParkingLot) o;
-        return Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(tel, that.tel) && Objects.equals(lastSync, that.lastSync) && Objects.equals(realTimeInfo, that.realTimeInfo) && Objects.equals(realTimeInfoDescription, that.realTimeInfoDescription) && Objects.equals(nightOpen, that.nightOpen) && Objects.equals(isFree, that.isFree) && Objects.equals(isNightFree, that.isNightFree) && Objects.equals(weekendFree, that.weekendFree) && Objects.equals(holidayFree, that.holidayFree);
+        return Objects.equals(name, that.name) && Objects.equals(address, that.address)
+                && Objects.equals(tel, that.tel) && Objects.equals(lastSync, that.lastSync)
+                && Objects.equals(realTimeInfoDescription, that.realTimeInfoDescription)
+                && Objects.equals(realTimeInfo, that.realTimeInfo) && Objects.equals(nightOpen, that.nightOpen)
+                && Objects.equals(isFree, that.isFree) && Objects.equals(isNightFree, that.isNightFree)
+                && Objects.equals(weekendFree, that.weekendFree) && Objects.equals(holidayFree, that.holidayFree);
     }
 
     @Override

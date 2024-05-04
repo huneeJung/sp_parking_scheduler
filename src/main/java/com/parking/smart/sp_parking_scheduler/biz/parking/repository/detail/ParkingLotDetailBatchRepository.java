@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ParkingLotDetailBatchRepository {
 
+    // JPA 배치보다 빠른 속도로 처리 가능
     private final JdbcTemplate jdbcTemplate;
 
     public void batchInsert(List<ParkingLotDetail> batchList) {
@@ -76,6 +77,6 @@ public class ParkingLotDetailBatchRepository {
         ps.setString(10, parkingLotDetail.getHolidayClose());
         ps.setBigDecimal(11, parkingLotDetail.getLatitude());
         ps.setBigDecimal(12, parkingLotDetail.getLongitude());
-        ps.setString(13, parkingLotDetail.getParkingLot().getCode());
+        ps.setString(13, parkingLotDetail.getCode());
     }
 }

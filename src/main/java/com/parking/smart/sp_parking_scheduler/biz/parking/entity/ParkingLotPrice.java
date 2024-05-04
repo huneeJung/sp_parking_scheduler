@@ -16,6 +16,9 @@ import java.util.Objects;
 @Table(name = "PARKING_LOT_PRICE")
 public class ParkingLotPrice extends CommonEntity {
 
+    @Column(name = "CODE", unique = true)
+    private String code;
+
     @Column(name = "UNIT_MINUTE")
     private Integer unitMinute;
 
@@ -35,7 +38,7 @@ public class ParkingLotPrice extends CommonEntity {
     private BigDecimal monthlyPassPrice;
 
     @OneToOne
-    @JoinColumn(name = "CODE")
+    @JoinColumn(name = "ID")
     private ParkingLot parkingLot;
 
     @Override
@@ -43,11 +46,14 @@ public class ParkingLotPrice extends CommonEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ParkingLotPrice that = (ParkingLotPrice) o;
-        return Objects.equals(unitMinute, that.unitMinute) && Objects.equals(unitPrice, that.unitPrice) && Objects.equals(extraMinute, that.extraMinute) && Objects.equals(extraPrice, that.extraPrice) && Objects.equals(dailyMaxPrice, that.dailyMaxPrice) && Objects.equals(monthlyPassPrice, that.monthlyPassPrice);
+        return Objects.equals(code, that.code) && Objects.equals(unitMinute, that.unitMinute)
+                && unitPrice.compareTo(that.unitPrice) == 0 && Objects.equals(extraMinute, that.extraMinute)
+                && extraPrice.compareTo(that.extraPrice) == 0 && dailyMaxPrice.compareTo(that.dailyMaxPrice) == 0
+                && monthlyPassPrice.compareTo(that.monthlyPassPrice) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(unitMinute, unitPrice, extraMinute, extraPrice, dailyMaxPrice, monthlyPassPrice);
+        return Objects.hash(code, unitMinute, unitPrice, extraMinute, extraPrice, dailyMaxPrice, monthlyPassPrice);
     }
 }
