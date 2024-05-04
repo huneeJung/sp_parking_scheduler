@@ -12,7 +12,7 @@ public class SchedulerConfig {
     public TaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.setPoolSize(2);
-        taskScheduler.setThreadNamePrefix("scheduled-task-");
+        taskScheduler.setThreadNamePrefix("parking-lot-synchronize-task-");
         taskScheduler.initialize();
         return taskScheduler;
     }

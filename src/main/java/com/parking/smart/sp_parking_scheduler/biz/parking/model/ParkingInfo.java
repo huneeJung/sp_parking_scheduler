@@ -1,117 +1,174 @@
 package com.parking.smart.sp_parking_scheduler.biz.parking.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.parking.smart.sp_parking_scheduler.biz.parking.entity.ParkingLot;
+import com.parking.smart.sp_parking_scheduler.biz.parking.entity.ParkingLotDetail;
+import com.parking.smart.sp_parking_scheduler.biz.parking.entity.ParkingLotPrice;
+import io.micrometer.common.util.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+@Slf4j
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ParkingInfo {
 
-    @JsonProperty(namespace = "PARKING_NAME")
-    private String parkingName;
+    @JsonProperty("PARKING_CODE")
+    private String code;
 
-    @JsonProperty(namespace = "ADDR")
-    private String addr;
+    @JsonProperty("PARKING_NAME")
+    private String name;
 
-    @JsonProperty(namespace = "PARKING_CODE")
-    private String parkingCode;
+    @JsonProperty("ADDR")
+    private String address;
 
-    @JsonProperty(namespace = "PARKING_TYPE")
-    private String parkingType;
-
-    @JsonProperty(namespace = "PARKING_TYPE_NM")
-    private String parkingTypeNm;
-
-    @JsonProperty(namespace = "OPERATION_RULE")
-    private String operationRule;
-
-    @JsonProperty(namespace = "OPERATION_RULE_NM")
-    private String operationRuleNm;
-
-    @JsonProperty(namespace = "TEL")
+    @JsonProperty("TEL")
     private String tel;
 
-    @JsonProperty(namespace = "QUE_STATUS")
-    private String queStatus;
+    @JsonProperty("PARKING_TYPE")
+    private String typeCode;
 
-    @JsonProperty(namespace = "QUE_STATUS_NM")
+    @JsonProperty("PARKING_TYPE_NM")
+    private String typeName;
+
+    @JsonProperty("OPERATION_RULE")
+    private Integer operationCode;
+
+    @JsonProperty("OPERATION_RULE_NM")
+    private String operationName;
+
+    @JsonProperty("QUE_STATUS")
+    private Integer queStatus;
+
+    @JsonProperty("QUE_STATUS_NM")
     private String queStatusNm;
 
-    @JsonProperty(namespace = "CAPACITY")
+    @JsonProperty("CAPACITY")
     private Integer capacity;
 
-    @JsonProperty(namespace = "PAY_YN")
-    private Integer free;
+    @JsonProperty("PAY_YN")
+    private String free;
 
-    @JsonProperty(namespace = "PAY_NM")
+    @JsonProperty("PAY_NM")
     private String freeNm;
 
-    @JsonProperty(namespace = "NIGHT_FREE_OPEN")
+    @JsonProperty("NIGHT_FREE_OPEN")
     private String nightFree;
 
-    @JsonProperty(namespace = "NIGHT_FREE_OPEN_NM")
+    @JsonProperty("NIGHT_FREE_OPEN_NM")
     private String nightFreeNm;
 
-    @JsonProperty(namespace = "WEEKDAY_BEGIN_TIME")
+    @JsonProperty("WEEKDAY_BEGIN_TIME")
     private String weekdayOpen;
 
-    @JsonProperty(namespace = "WEEKDAY_END_TIME")
+    @JsonProperty("WEEKDAY_END_TIME")
     private String weekdayClose;
 
-    @JsonProperty(namespace = "WEEKEND_BEGIN_TIME")
+    @JsonProperty("WEEKEND_BEGIN_TIME")
     private String weekendOpen;
 
-    @JsonProperty(namespace = "WEEKEND_END_TIME")
+    @JsonProperty("WEEKEND_END_TIME")
     private String weekendClose;
 
-    @JsonProperty(namespace = "HOLIDAY_BEGIN_TIME")
+    @JsonProperty("HOLIDAY_BEGIN_TIME")
     private String holidayOpen;
 
-    @JsonProperty(namespace = "HOLIDAY_END_TIME")
+    @JsonProperty("HOLIDAY_END_TIME")
     private String holidayClose;
 
-    @JsonProperty(namespace = "SYNC_TIME")
+    @JsonProperty("SYNC_TIME")
     private String lastSyncTime;
 
-    @JsonProperty(namespace = "SATURDAY_PAY_YN")
+    @JsonProperty("SATURDAY_PAY_YN")
     private String weekendFree;
 
-    @JsonProperty(namespace = "SATURDAY_PAY_NM")
+    @JsonProperty("SATURDAY_PAY_NM")
     private String weekendFreeNm;
 
-    @JsonProperty(namespace = "HOLIDAY_PAY_YN")
+    @JsonProperty("HOLIDAY_PAY_YN")
     private String holidayFree;
 
-    @JsonProperty(namespace = "HOLIDAY_PAY_NM")
+    @JsonProperty("HOLIDAY_PAY_NM")
     private String holidayFreeNm;
 
-    @JsonProperty(namespace = "FULLTIME_MONTHLY")
+    @JsonProperty("FULLTIME_MONTHLY")
     private String monthlyPassPrice;
 
-    @JsonProperty(namespace = "RATES")
+    @JsonProperty("RATES")
     private String basicParkingPrice;
 
-    @JsonProperty(namespace = "TIME_RATE")
-    private String basicParkingTime;
+    @JsonProperty("TIME_RATE")
+    private Integer basicParkingTime;
 
-    @JsonProperty(namespace = "ADD_RATES")
+    @JsonProperty("ADD_RATES")
     private String additionalParkingPrice;
 
-    @JsonProperty(namespace = "ADD_TIME_RATE")
-    private String additionalParkingTime;
+    @JsonProperty("ADD_TIME_RATE")
+    private Integer additionalParkingTime;
 
-    @JsonProperty(namespace = "DAY_MAXIMUM")
+    @JsonProperty("DAY_MAXIMUM")
     private String dailyMaxAmt;
 
-    @JsonProperty(namespace = "LAT")
+    @JsonProperty("LAT")
     private String lat;
 
-    @JsonProperty(namespace = "LNG")
+    @JsonProperty("LNG")
     private String lng;
+
+    public ParkingLot toParkingLot() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime syncTime = StringUtils.isBlank(lastSyncTime) ? null : LocalDateTime.parse(lastSyncTime, formatter);
+        return ParkingLot.builder()
+                .name(name)
+                .address(address)
+                .tel(tel)
+                .lastSync(syncTime)
+                .realTimeInfo(queStatus)
+                .realTimeInfoDescription(queStatusNm)
+                .isFree(StringUtils.isBlank(free) ? null : this.free.equals("Y"))
+                .isNightFree(StringUtils.isBlank(nightFree) ? null : nightFree.equals("Y"))
+                .nightOpen(nightFreeNm)
+                .weekendFree(StringUtils.isBlank(weekendFree) ? null : weekendFree.equals("Y"))
+                .holidayFree(StringUtils.isBlank(holidayFree) ? null : holidayFree.equals("Y"))
+                .build();
+    }
+
+    public ParkingLotDetail toParkingLotDetail() {
+        return ParkingLotDetail.builder()
+                .typeName(typeName)
+                .operationCode(operationCode)
+                .operationName(operationName)
+                .weekdayOpen(weekdayOpen)
+                .weekdayClose(weekdayClose)
+                .weekendOpen(weekendOpen)
+                .weekendClose(weekendClose)
+                .holidayOpen(holidayOpen)
+                .holidayClose(holidayClose)
+                .latitude(StringUtils.isBlank(lat) ? null : new BigDecimal(lat))
+                .longitude(StringUtils.isBlank(lng) ? null : new BigDecimal(lng))
+                .build();
+    }
+
+    public ParkingLotPrice toParkingLotPrice() {
+        return ParkingLotPrice.builder()
+                .unitMinute(basicParkingTime)
+                .unitPrice(StringUtils.isBlank(basicParkingPrice) ? null : new BigDecimal(basicParkingPrice))
+                .extraMinute(additionalParkingTime)
+                .extraPrice(StringUtils.isBlank(additionalParkingPrice) ? null : new BigDecimal(additionalParkingPrice))
+                .dailyMaxPrice(StringUtils.isBlank(dailyMaxAmt) ? null : new BigDecimal(dailyMaxAmt))
+                .monthlyPassPrice(StringUtils.isBlank(monthlyPassPrice) ? null : new BigDecimal(monthlyPassPrice))
+                .build();
+    }
 
 }

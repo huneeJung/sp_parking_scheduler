@@ -15,20 +15,24 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class CommonEntity {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
-    @Column(updatable = false)
     @CreatedDate
+    @Column(name = "CREATED_DATE", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdDate;
 
-    @Column(updatable = false)
+    @Column(name = "CREATED_NAME", updatable = false, columnDefinition = "VARCHAR(20) DEFAULT 'SYSTEM'")
     private String createdName;
 
     @LastModifiedDate
+    @Column(name = "MODIFIED_DATE", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime modifiedDate;
 
-    private String updatedName;
+    @Column(name = "MODIFIED_NAME", columnDefinition = "VARCHAR(20) DEFAULT 'SYSTEM'")
+    private String modifiedName;
 
 }
