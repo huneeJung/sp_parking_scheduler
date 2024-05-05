@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+    
     // spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -37,6 +38,10 @@ dependencies {
 
     // jasypt
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+
+    // monitoring
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus' // 마이크로미터 프로메테우스 구현체
+    implementation 'org.springframework.boot:spring-boot-starter-actuator' // 메트릭 수집기
 
 }
 
