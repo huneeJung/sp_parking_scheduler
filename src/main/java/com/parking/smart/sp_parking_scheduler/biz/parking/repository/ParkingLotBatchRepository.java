@@ -15,7 +15,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ParkingLotBatchRepository {
 
-    // JPA 배치보다 빠른 속도로 처리 가능
+    // Mysql 은 시퀀스 채번 방식을 지원하지 않으며, Identity 채번 방식은 Batch Insert 지원하지 않음
+    // 일반적으로 RDBMS 가 Mysql 인 경우 JPA 를 활용하여 배치를 수행하기 보다는 JdbcTemplate 으로 배치 처리 권장 속도적 우위
     private final JdbcTemplate jdbcTemplate;
 
     public void batchInsert(List<ParkingLot> batchList) {
