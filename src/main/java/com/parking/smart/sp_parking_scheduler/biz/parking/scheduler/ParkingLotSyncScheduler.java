@@ -43,8 +43,8 @@ public class ParkingLotSyncScheduler {
     private Integer insertBatchFlag;
 
     // 매일 새벽 3시에 실행
-//    @Scheduled(cron = "0 0 3 * * *")
-    @Scheduled(fixedDelay = 50000000, initialDelay = 5000)
+    @Scheduled(cron = "0 0 3 * * *")
+//    @Scheduled(fixedDelay = 50000000, initialDelay = 5000)
     private void syncParkingLotInfo() {
 
         Instant start = Instant.now();
