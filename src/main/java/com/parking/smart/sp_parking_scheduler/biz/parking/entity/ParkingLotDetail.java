@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -31,23 +32,23 @@ public class ParkingLotDetail extends CommonEntity {
     @Column(name = "OPERATION_NAME")
     private String operationName;
 
-    @Column(name = "WEEKDAY_OPEN")
-    private String weekdayOpen;
+    @Column(name = "TEL")
+    private String tel;
 
-    @Column(name = "WEEKDAY_CLOSE")
-    private String weekdayClose;
+    @Column(name = "LAST_SYNC")
+    private LocalDateTime lastSync;
 
-    @Column(name = "WEEKEND_OPEN")
-    private String weekendOpen;
+    @Column(name = "REAL_TIME_INFO")
+    private Integer realTimeInfo;
 
-    @Column(name = "WEEKEND_CLOSE")
-    private String weekendClose;
+    @Column(name = "REAL_TIME_INFO_DESCRIPTION")
+    private String realTimeInfoDescription;
 
-    @Column(name = "HOLIDAY_OPEN")
-    private String holidayOpen;
+    @Column(name = "NIGHT_OPEN")
+    private String nightOpen;
 
-    @Column(name = "HOLIDAY_CLOSE")
-    private String holidayClose;
+    @Column(name = "IS_NIGHT_FREE")
+    private Boolean isNightFree;
 
     @Column(name = "LATITUDE", precision = 20, scale = 8)
     private BigDecimal latitude;
@@ -68,14 +69,15 @@ public class ParkingLotDetail extends CommonEntity {
         // 같은 주차장인 중복 데이터가 존재하고 각각의 위도 경도 수치가 달라 매번 업데이트 수행하는 불필요한 오버헤드 발생
         return Objects.equals(code, that.code) && Objects.equals(typeCode, that.typeCode)
                 && Objects.equals(typeName, that.typeName) && Objects.equals(operationCode, that.operationCode)
-                && Objects.equals(operationName, that.operationName) && Objects.equals(weekdayOpen, that.weekdayOpen)
-                && Objects.equals(weekdayClose, that.weekdayClose) && Objects.equals(weekendOpen, that.weekendOpen)
-                && Objects.equals(weekendClose, that.weekendClose) && Objects.equals(holidayOpen, that.holidayOpen)
-                && Objects.equals(holidayClose, that.holidayClose);
+                && Objects.equals(operationName, that.operationName) && Objects.equals(tel, that.tel)
+                && Objects.equals(lastSync, that.lastSync) && Objects.equals(realTimeInfo, that.realTimeInfo)
+                && Objects.equals(realTimeInfoDescription, that.realTimeInfoDescription)
+                && Objects.equals(nightOpen, that.nightOpen) && Objects.equals(isNightFree, that.isNightFree);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(code, typeCode, typeName, operationCode, operationName, weekdayOpen, weekdayClose, weekendOpen, weekendClose, holidayOpen, holidayClose, latitude, longitude);
+        return Objects.hash(code, typeCode, typeName, operationCode, operationName,
+                tel, lastSync, realTimeInfo, realTimeInfoDescription, nightOpen, isNightFree);
     }
 }

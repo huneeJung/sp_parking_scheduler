@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -23,8 +22,8 @@ public class ParkingLotBatchRepository {
         jdbcTemplate.batchUpdate(
                 """
                             INSERT INTO PARKING_LOT (
-                            name, address, tel, last_sync, real_time_info, real_time_info_description,
-                            night_open, is_free, is_night_free, weekend_free, holiday_free,
+                            name, address, weekday_open, weekday_close, weekend_open, weekend_close,
+                            holiday_open, holiday_close, is_free, weekend_free, holiday_free,
                             created_date, created_name, modified_date, modified_name, code
                             ) VALUES (?,?,?,?,?,?,?,?,?,?,?,NOW(),'SYSTEM',NOW(),'SYSTEM',?)
                             ON DUPLICATE KEY UPDATE code=code 
@@ -47,8 +46,8 @@ public class ParkingLotBatchRepository {
         jdbcTemplate.batchUpdate(
                 """
                             UPDATE PARKING_LOT SET
-                            name=?, address=?, tel=?, last_sync=?, real_time_info=?, real_time_info_description=?, 
-                            night_open=?, is_free=?, is_night_free=?, weekend_free=?, holiday_free=?,
+                            name=?, address=?, weekday_open=?, weekday_close=?, weekend_open=?, weekend_close=?,
+                            holiday_open=?, holiday_close=?, is_free=?, weekend_free=?, holiday_free=?,
                             modified_date=NOW(), modified_name='SYSTEM'
                             where code=?
                         """,
@@ -69,13 +68,13 @@ public class ParkingLotBatchRepository {
     private void setStatement(PreparedStatement ps, ParkingLot parkingLot) throws SQLException {
         ps.setString(1, parkingLot.getName());
         ps.setString(2, parkingLot.getAddress());
-        ps.setString(3, parkingLot.getTel());
-        ps.setTimestamp(4, Timestamp.valueOf(parkingLot.getLastSync()));
-        ps.setInt(5, parkingLot.getRealTimeInfo());
-        ps.setString(6, parkingLot.getRealTimeInfoDescription());
-        ps.setString(7, parkingLot.getNightOpen());
-        ps.setBoolean(8, parkingLot.getIsFree());
-        ps.setBoolean(9, parkingLot.getIsNightFree());
+        ps.setString(3, parkingLot.getWeekdayOpen());
+        ps.setString(4, parkingLot.getWeekdayClose());
+        ps.setString(5, parkingLot.getWeekendOpen());
+        ps.setString(6, parkingLot.getWeekendClose());
+        ps.setString(7, parkingLot.getHolidayOpen());
+        ps.setString(8, parkingLot.getHolidayClose());
+        ps.setBoolean(9, parkingLot.getIsFree());
         ps.setBoolean(10, parkingLot.getWeekendFree());
         ps.setBoolean(11, parkingLot.getHolidayFree());
         ps.setString(12, parkingLot.getCode());

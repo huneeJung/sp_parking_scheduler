@@ -7,7 +7,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static jakarta.persistence.CascadeType.ALL;
@@ -31,26 +30,26 @@ public class ParkingLot extends CommonEntity {
     @Column(name = "ADDRESS")
     private String address;
 
-    @Column(name = "TEL")
-    private String tel;
+    @Column(name = "WEEKDAY_OPEN")
+    private String weekdayOpen;
 
-    @Column(name = "LAST_SYNC")
-    private LocalDateTime lastSync;
+    @Column(name = "WEEKDAY_CLOSE")
+    private String weekdayClose;
 
-    @Column(name = "REAL_TIME_INFO")
-    private Integer realTimeInfo;
+    @Column(name = "WEEKEND_OPEN")
+    private String weekendOpen;
 
-    @Column(name = "REAL_TIME_INFO_DESCRIPTION")
-    private String realTimeInfoDescription;
+    @Column(name = "WEEKEND_CLOSE")
+    private String weekendClose;
 
-    @Column(name = "NIGHT_OPEN")
-    private String nightOpen;
+    @Column(name = "HOLIDAY_OPEN")
+    private String holidayOpen;
+
+    @Column(name = "HOLIDAY_CLOSE")
+    private String holidayClose;
 
     @Column(name = "IS_FREE")
     private Boolean isFree;
-
-    @Column(name = "IS_NIGHT_FREE")
-    private Boolean isNightFree;
 
     @Column(name = "WEEKEND_FREE")
     private Boolean weekendFree;
@@ -69,17 +68,18 @@ public class ParkingLot extends CommonEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ParkingLot that = (ParkingLot) o;
-        return Objects.equals(name, that.name) && Objects.equals(address, that.address)
-                && Objects.equals(tel, that.tel) && Objects.equals(lastSync, that.lastSync)
-                && Objects.equals(realTimeInfoDescription, that.realTimeInfoDescription)
-                && Objects.equals(realTimeInfo, that.realTimeInfo) && Objects.equals(nightOpen, that.nightOpen)
-                && Objects.equals(isFree, that.isFree) && Objects.equals(isNightFree, that.isNightFree)
+        return Objects.equals(code, that.code) && Objects.equals(name, that.name)
+                && Objects.equals(address, that.address) && Objects.equals(weekdayOpen, that.weekdayOpen)
+                && Objects.equals(weekdayClose, that.weekdayClose) && Objects.equals(weekendOpen, that.weekendOpen)
+                && Objects.equals(weekendClose, that.weekendClose) && Objects.equals(holidayOpen, that.holidayOpen)
+                && Objects.equals(holidayClose, that.holidayClose) && Objects.equals(isFree, that.isFree)
                 && Objects.equals(weekendFree, that.weekendFree) && Objects.equals(holidayFree, that.holidayFree);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, address, tel, lastSync, realTimeInfo, realTimeInfoDescription, nightOpen, isFree, isNightFree, weekendFree, holidayFree);
+        return Objects.hash(code, name, address, weekdayOpen, weekdayClose, weekendOpen,
+                weekendClose, holidayOpen, holidayClose, isFree, weekendFree, holidayFree);
     }
 }
 

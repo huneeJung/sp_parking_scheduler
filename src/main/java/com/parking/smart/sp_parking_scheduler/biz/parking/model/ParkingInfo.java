@@ -129,36 +129,37 @@ public class ParkingInfo {
     private String lng;
 
     public ParkingLot toParkingLot() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime syncTime = StringUtils.isBlank(lastSyncTime) ? null : LocalDateTime.parse(lastSyncTime, formatter);
         return ParkingLot.builder()
+                .code(code)
                 .name(name)
                 .address(address)
-                .tel(tel)
-                .lastSync(syncTime)
-                .realTimeInfo(queStatus)
-                .realTimeInfoDescription(queStatusNm)
-                .isFree(!StringUtils.isBlank(free) && this.free.equals("Y"))
-                .isNightFree(!StringUtils.isBlank(nightFree) && nightFree.equals("Y"))
-                .nightOpen(nightFreeNm)
-                .weekendFree(!StringUtils.isBlank(weekendFree) && weekendFree.equals("Y"))
-                .holidayFree(!StringUtils.isBlank(holidayFree) && holidayFree.equals("Y"))
-                .build();
-    }
-
-    public ParkingLotDetail toParkingLotDetail() {
-        return ParkingLotDetail.builder()
-                .code(code)
-                .typeCode(typeCode)
-                .typeName(typeName)
-                .operationCode(operationCode)
-                .operationName(operationName)
                 .weekdayOpen(weekdayOpen)
                 .weekdayClose(weekdayClose)
                 .weekendOpen(weekendOpen)
                 .weekendClose(weekendClose)
                 .holidayOpen(holidayOpen)
                 .holidayClose(holidayClose)
+                .isFree(!StringUtils.isBlank(free) && this.free.equals("Y"))
+                .weekendFree(!StringUtils.isBlank(weekendFree) && weekendFree.equals("Y"))
+                .holidayFree(!StringUtils.isBlank(holidayFree) && holidayFree.equals("Y"))
+                .build();
+    }
+
+    public ParkingLotDetail toParkingLotDetail() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime syncTime = StringUtils.isBlank(lastSyncTime) ? null : LocalDateTime.parse(lastSyncTime, formatter);
+        return ParkingLotDetail.builder()
+                .code(code)
+                .typeCode(typeCode)
+                .typeName(typeName)
+                .operationCode(operationCode)
+                .operationName(operationName)
+                .tel(tel)
+                .lastSync(syncTime)
+                .realTimeInfo(queStatus)
+                .realTimeInfoDescription(queStatusNm)
+                .nightOpen(nightFreeNm)
+                .isNightFree(!StringUtils.isBlank(nightFree) && this.nightFree.equals("Y"))
                 .latitude(StringUtils.isBlank(lat) ? ZERO : new BigDecimal(lat))
                 .longitude(StringUtils.isBlank(lng) ? ZERO : new BigDecimal(lng))
                 .build();
