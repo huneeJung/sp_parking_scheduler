@@ -14,10 +14,8 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.time.Duration;
@@ -43,66 +41,65 @@ public class ParkingLotSyncScheduler {
     private Integer insertBatchFlag;
 
     // 매일 새벽 3시에 실행
-    @Scheduled(cron = "0 0 3 * * *")
-//    @Scheduled(fixedDelay = 50000000, initialDelay = 5000)
+//    @Scheduled(cron = "0 0 3 * * *")
+    @Scheduled(fixedDelay = 50000000, initialDelay = 5000)
     private void syncParkingLotInfo() {
 
-        Instant start = Instant.now();
-        String pinUrl = url + File.separator + authKey + File.separator +
+        var start = Instant.now();
+        var pinUrl = url + File.separator + authKey + File.separator +
                 dataType + File.separator + service;
         var startIndex = 1;
         var endIndex = 1000;
-        var listSize = 0;
+        var totalCount = 0;
 
         do {
             log.info("ParkingLot Synchronize Start ::: startIndex {} , endIndex {}", startIndex, endIndex);
             var requestUrl = pinUrl + File.separator + startIndex + File.separator + endIndex;
-            RestTemplate restTemplate = new RestTemplateBuilder().build();
-            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-                    requestUrl, HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<>() {
+            var restTemplate = new RestTemplateBuilder().build();
+            var response = restTemplate.exchange(
+                    requestUrl, HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<Map<String, Object>>() {
                     });
-            Map<String, Object> body = response.getBody();
-            if (response.getStatusCode().value() != 200 || body == null || body.get("GetParkInfo") == null) {
+            var body = response.getBody();
+            if (response.getStatusCode().value() != 200 || body == null || body.get(service) == null) {
                 log.info("ParkingLot OpenAPI Request Failed ::: requestUrl {}", requestUrl);
                 break;
             }
-            Map<String, Object> parkInfo = (Map<String, Object>) body.get("GetParkInfo");
-            listSize = (int) parkInfo.get("list_total_count");
-            ObjectMapper om = new ObjectMapper();
-            List<ParkingInfo> parkingInfoList = om.convertValue(parkInfo.get("row"), new TypeReference<>() {
+            var parkInfo = (Map<String, Object>) body.get(service);
+            totalCount = (int) parkInfo.get("list_total_count");
+            var om = new ObjectMapper();
+            var parkingInfoList = om.convertValue(parkInfo.get("row"), new TypeReference<List<ParkingInfo>>() {
             });
             try {
                 updateParkingLots(parkingInfoList);
             } catch (Exception e) {
                 log.warn("ParkingLot OpenAPI Batch Failed ::: startIndex {} ::: endIndex {} ::: errorMessage {}",
                         startIndex, endIndex, e.getMessage(), e);
-                // TODO : Slack 연동 및 알림 처리 코드 추가
+                // TODO : Slack 연동 및 알림 처리 코드 추가 CommonService 로 처리
             }
             startIndex += 1000;
             endIndex += 1000;
-        } while (startIndex <= listSize);
+        } while (startIndex <= totalCount);
 
-        Instant end = Instant.now();
-        long workingTime = Duration.between(start, end).toSeconds();
-
-        log.info("ParkingLot Synchronize End ::: listSize {} ::: workTime {}", listSize, workingTime);
+        var end = Instant.now();
+        long workingTime = Duration.between(start, end).toMillis();
+        log.info("ParkingLot Synchronize End ::: totalCount {} ::: workTime {}ms", totalCount, workingTime);
     }
 
     public void updateParkingLots(List<ParkingInfo> parkingInfoList) {
 
-        List<ParkingLot> updateLotList = new ArrayList<>();
-        List<ParkingLotDetail> updateLotDetailList = new ArrayList<>();
-        List<ParkingLotPrice> updateLotPriceList = new ArrayList<>();
+        var updateLotList = new ArrayList<ParkingLot>();
+        var updateLotDetailList = new ArrayList<ParkingLotDetail>();
+        var updateLotPriceList = new ArrayList<ParkingLotPrice>();
 
         // 공영주차장 OpenAPI 동기화할 목록 1000건 Select
-        Set<String> insertTargets = new HashSet<>(1000);
+        var insertTargets = new HashSet<String>(1000);
         for (ParkingInfo parkingInfo : parkingInfoList) {
             insertTargets.add(parkingInfo.getCode());
         }
         var selectedParkingLots = parkingLotService.findAnyByCodes(insertTargets);
 
         // UpdateTarget , InsertTarget 데이터 분기
-        Map<String, ParkingLot> updateTargets = new HashMap<>();
+        var updateTargets = new HashMap<String, ParkingLot>();
         for (ParkingLot parkingLot : selectedParkingLots) {
             var id = parkingLot.getCode();
             updateTargets.put(id, parkingLot);
@@ -113,7 +110,7 @@ public class ParkingLotSyncScheduler {
         List<ParkingLotDetail> insertLotDetailList = null;
         List<ParkingLotPrice> insertLotPriceList = null;
 
-        boolean insertBatchMode = false;
+        var insertBatchMode = false;
         // insertTarget 설정값 이상 건수이면 Insert 배치 모드
         // Update 의 경우에는 항상 배치 모드
         // UpdateTarget 에서 기본/세부/가격 정보에 변경사항이 있는지 검증 후 업데이트하므로 사전에 몇건을 업데이트 할 것인지 확인 불가

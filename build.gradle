@@ -43,9 +43,6 @@ dependencies {
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus' // 마이크로미터 프로메테우스 구현체
     implementation 'org.springframework.boot:spring-boot-starter-actuator' // 메트릭 수집기
 
-    // jackson
-    implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.17.0'
-
 }
 
 tasks.named('test') {

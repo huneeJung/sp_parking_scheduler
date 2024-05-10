@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
-public interface ParkingLotRepository extends JpaRepository<ParkingLot, String> {
+public interface ParkingLotRepository extends JpaRepository<ParkingLot, Long> {
 
     @Query("""
             SELECT pl FROM ParkingLot pl
