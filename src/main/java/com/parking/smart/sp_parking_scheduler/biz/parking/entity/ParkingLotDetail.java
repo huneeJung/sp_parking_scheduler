@@ -4,7 +4,6 @@ import com.parking.smart.sp_parking_scheduler.biz.common.CommonEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -49,12 +48,6 @@ public class ParkingLotDetail extends CommonEntity {
 
     @Column(name = "IS_NIGHT_FREE")
     private Boolean isNightFree;
-
-    @Column(name = "LATITUDE", precision = 20, scale = 8)
-    private BigDecimal latitude;
-
-    @Column(name = "LONGITUDE", precision = 20, scale = 8)
-    private BigDecimal longitude;
 
     @OneToOne
     @JoinColumn(name = "ID")

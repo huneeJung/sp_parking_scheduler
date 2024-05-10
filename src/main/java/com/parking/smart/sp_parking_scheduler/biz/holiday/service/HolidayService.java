@@ -1,7 +1,7 @@
 package com.parking.smart.sp_parking_scheduler.biz.holiday.service;
 
-import com.parking.smart.sp_parking_scheduler.biz.holiday.HolidayRepository;
 import com.parking.smart.sp_parking_scheduler.biz.holiday.model.HolidayInfo;
+import com.parking.smart.sp_parking_scheduler.biz.holiday.repository.HolidayRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

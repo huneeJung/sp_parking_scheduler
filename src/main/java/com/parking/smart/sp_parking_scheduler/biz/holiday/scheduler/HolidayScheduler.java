@@ -1,4 +1,4 @@
-package com.parking.smart.sp_parking_scheduler.biz.holiday;
+package com.parking.smart.sp_parking_scheduler.biz.holiday.scheduler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

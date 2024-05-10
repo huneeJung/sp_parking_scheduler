@@ -25,9 +25,9 @@ public class ParkingLotDetailBatchRepository {
                             INSERT INTO PARKING_LOT_DETAIL (
                             type_code, type_name, operation_code, operation_name,
                             tel, last_sync, real_time_info, real_time_info_description,
-                            night_open, is_night_free, latitude, longitude,
+                            night_open, is_night_free,
                             created_date, created_name, modified_date, modified_name, code
-                            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,NOW(),'SYSTEM',NOW(),'SYSTEM',?)
+                            ) VALUES (?,?,?,?,?,?,?,?,?,?,NOW(),'SYSTEM',NOW(),'SYSTEM',?)
                             ON DUPLICATE KEY UPDATE code=code 
                         """,
                 new BatchPreparedStatementSetter() {
@@ -50,8 +50,7 @@ public class ParkingLotDetailBatchRepository {
                             UPDATE PARKING_LOT_DETAIL SET
                             type_code=?, type_name=?, operation_code=?, operation_name=?,
                             tel=?, last_sync=?, real_time_info=?, real_time_info_description=?,
-                            night_open=?, is_night_free=?, latitude=?, longitude=?,
-                            modified_date=NOW(), modified_name='SYSTEM'
+                            night_open=?, is_night_free=?, modified_date=NOW(), modified_name='SYSTEM'
                             where code=?
                         """,
                 new BatchPreparedStatementSetter() {
@@ -79,8 +78,6 @@ public class ParkingLotDetailBatchRepository {
         ps.setString(8, parkingLotDetail.getRealTimeInfoDescription());
         ps.setString(9, parkingLotDetail.getNightOpen());
         ps.setBoolean(10, parkingLotDetail.getIsNightFree());
-        ps.setBigDecimal(11, parkingLotDetail.getLatitude());
-        ps.setBigDecimal(12, parkingLotDetail.getLongitude());
-        ps.setString(13, parkingLotDetail.getCode());
+        ps.setString(11, parkingLotDetail.getCode());
     }
 }

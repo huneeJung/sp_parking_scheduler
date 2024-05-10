@@ -24,8 +24,8 @@ public class ParkingLotBatchRepository {
                             INSERT INTO PARKING_LOT (
                             name, address, weekday_open, weekday_close, weekend_open, weekend_close,
                             holiday_open, holiday_close, is_free, weekend_free, holiday_free,
-                            created_date, created_name, modified_date, modified_name, code
-                            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,NOW(),'SYSTEM',NOW(),'SYSTEM',?)
+                            latitude, longitude, created_date, created_name, modified_date, modified_name, code
+                            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),'SYSTEM',NOW(),'SYSTEM',?)
                             ON DUPLICATE KEY UPDATE code=code 
                         """,
                 new BatchPreparedStatementSetter() {
@@ -47,8 +47,8 @@ public class ParkingLotBatchRepository {
                 """
                             UPDATE PARKING_LOT SET
                             name=?, address=?, weekday_open=?, weekday_close=?, weekend_open=?, weekend_close=?,
-                            holiday_open=?, holiday_close=?, is_free=?, weekend_free=?, holiday_free=?,
-                            modified_date=NOW(), modified_name='SYSTEM'
+                            holiday_open=?, holiday_close=?, is_free=?, weekend_free=?, holiday_free=?, 
+                            latitude=?, longitude=?, modified_date=NOW(), modified_name='SYSTEM'
                             where code=?
                         """,
                 new BatchPreparedStatementSetter() {
@@ -77,6 +77,8 @@ public class ParkingLotBatchRepository {
         ps.setBoolean(9, parkingLot.getIsFree());
         ps.setBoolean(10, parkingLot.getWeekendFree());
         ps.setBoolean(11, parkingLot.getHolidayFree());
-        ps.setString(12, parkingLot.getCode());
+        ps.setBigDecimal(12, parkingLot.getLatitude());
+        ps.setBigDecimal(13, parkingLot.getLongitude());
+        ps.setString(14, parkingLot.getCode());
     }
 }

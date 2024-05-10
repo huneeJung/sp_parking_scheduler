@@ -7,6 +7,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import static jakarta.persistence.CascadeType.ALL;
@@ -62,6 +63,12 @@ public class ParkingLot extends CommonEntity {
 
     @OneToOne(mappedBy = "parkingLot", fetch = LAZY, cascade = ALL)
     private ParkingLotDetail parkingLotDetail;
+
+    @Column(name = "LATITUDE", precision = 20, scale = 8)
+    private BigDecimal latitude;
+
+    @Column(name = "LONGITUDE", precision = 20, scale = 8)
+    private BigDecimal longitude;
 
     @Override
     public boolean equals(Object o) {

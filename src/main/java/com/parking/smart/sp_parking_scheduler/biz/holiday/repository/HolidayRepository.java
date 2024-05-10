@@ -1,4 +1,4 @@
-package com.parking.smart.sp_parking_scheduler.biz.holiday;
+package com.parking.smart.sp_parking_scheduler.biz.holiday.repository;
 
 import com.parking.smart.sp_parking_scheduler.biz.holiday.entity.Holiday;
 import org.springframework.data.jpa.repository.JpaRepository;
