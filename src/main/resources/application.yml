@@ -38,6 +38,7 @@ server:
     accept-count: 100
     keep-alive-timeout: 100
 
+## ParkingLot OpenAPI
 parking:
   openapi:
     url: http://openapi.seoul.go.kr:8088
@@ -47,15 +48,11 @@ parking:
   insert:
     batch:
       flag: 100
-
+## Holiday OpenAPI
 holiday:
   openapi:
     url: http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?
     key: ENC(q6Fv+K0h/DzsZ2hXuWSr1F+ymI0kIekJ7OZj333cCZOoIgUDVP2FE4MDE/mqUYAkHMlemC3CFaw5L5jfCm36+xbmDtjJGsFmAWpfP1KrPvaJhQ8gIP0ekCVCpd1rlrfGiDT5P/3S9lE2T8yrU3ageA==)
-
-
-
-
 
 ## Jasypt
 jasypt:

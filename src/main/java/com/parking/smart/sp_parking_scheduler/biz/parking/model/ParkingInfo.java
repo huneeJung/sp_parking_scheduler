@@ -38,6 +38,9 @@ public class ParkingInfo {
     @JsonProperty("TEL")
     private String tel;
 
+    @JsonProperty("CAPACITY")
+    private Integer capacity;
+
     @JsonProperty("PARKING_TYPE")
     private String typeCode;
 
@@ -55,9 +58,6 @@ public class ParkingInfo {
 
     @JsonProperty("QUE_STATUS_NM")
     private String queStatusNm;
-
-    @JsonProperty("CAPACITY")
-    private Integer capacity;
 
     @JsonProperty("PAY_YN")
     private String free;
@@ -133,6 +133,7 @@ public class ParkingInfo {
                 .code(code)
                 .name(name)
                 .address(address)
+                .capacity(capacity)
                 .weekdayOpen(weekdayOpen)
                 .weekdayClose(weekdayClose)
                 .weekendOpen(weekendOpen)

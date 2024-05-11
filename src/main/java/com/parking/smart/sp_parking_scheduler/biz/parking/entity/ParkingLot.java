@@ -31,6 +31,9 @@ public class ParkingLot extends CommonEntity {
     @Column(name = "ADDRESS")
     private String address;
 
+    @Column(name = "CAPACITY")
+    private Integer capacity;
+
     @Column(name = "WEEKDAY_OPEN")
     private String weekdayOpen;
 
@@ -75,8 +78,8 @@ public class ParkingLot extends CommonEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ParkingLot that = (ParkingLot) o;
-        return Objects.equals(code, that.code) && Objects.equals(name, that.name)
-                && Objects.equals(address, that.address) && Objects.equals(weekdayOpen, that.weekdayOpen)
+        return Objects.equals(code, that.code) && Objects.equals(name, that.name) && Objects.equals(address, that.address)
+                && Objects.equals(capacity, that.capacity) && Objects.equals(weekdayOpen, that.weekdayOpen)
                 && Objects.equals(weekdayClose, that.weekdayClose) && Objects.equals(weekendOpen, that.weekendOpen)
                 && Objects.equals(weekendClose, that.weekendClose) && Objects.equals(holidayOpen, that.holidayOpen)
                 && Objects.equals(holidayClose, that.holidayClose) && Objects.equals(isFree, that.isFree)
@@ -85,7 +88,7 @@ public class ParkingLot extends CommonEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(code, name, address, weekdayOpen, weekdayClose, weekendOpen,
+        return Objects.hash(code, name, address, capacity, weekdayOpen, weekdayClose, weekendOpen,
                 weekendClose, holidayOpen, holidayClose, isFree, weekendFree, holidayFree);
     }
 }
