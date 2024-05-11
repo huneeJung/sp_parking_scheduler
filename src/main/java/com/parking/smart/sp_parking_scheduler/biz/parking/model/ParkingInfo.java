@@ -139,9 +139,9 @@ public class ParkingInfo {
                 .weekendClose(weekendClose)
                 .holidayOpen(holidayOpen)
                 .holidayClose(holidayClose)
-                .isFree(!StringUtils.isBlank(free) && this.free.equals("Y"))
-                .weekendFree(!StringUtils.isBlank(weekendFree) && weekendFree.equals("Y"))
-                .holidayFree(!StringUtils.isBlank(holidayFree) && holidayFree.equals("Y"))
+                .isFree(!StringUtils.isBlank(free) && !this.free.equals("Y"))
+                .weekendFree(!StringUtils.isBlank(weekendFree) && !weekendFree.equals("Y"))
+                .holidayFree(!StringUtils.isBlank(holidayFree) && !holidayFree.equals("Y"))
                 .latitude(StringUtils.isBlank(lat) ? ZERO : new BigDecimal(lat))
                 .longitude(StringUtils.isBlank(lng) ? ZERO : new BigDecimal(lng))
                 .build();
@@ -161,7 +161,7 @@ public class ParkingInfo {
                 .realTimeInfo(queStatus)
                 .realTimeInfoDescription(queStatusNm)
                 .nightOpen(nightFreeNm)
-                .isNightFree(!StringUtils.isBlank(nightFree) && this.nightFree.equals("Y"))
+                .isNightFree(!StringUtils.isBlank(nightFree) && !this.nightFree.equals("Y"))
                 .build();
     }
 

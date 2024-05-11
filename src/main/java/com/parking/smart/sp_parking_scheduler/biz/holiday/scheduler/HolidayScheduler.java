@@ -33,8 +33,8 @@ public class HolidayScheduler {
     private String authKey;
 
     // 매달 1일 새벽 3시에 실행
-    @Scheduled(cron = "0 0 3 1 * *")
-//    @Scheduled(fixedDelay = 50000000, initialDelay = 5000)
+//    @Scheduled(cron = "0 0 3 1 * *")
+    @Scheduled(fixedDelay = 50000000, initialDelay = 5000)
     public void syncHolidayInfo() {
         var start = Instant.now();
         log.info("Holiday Synchronize Start");
