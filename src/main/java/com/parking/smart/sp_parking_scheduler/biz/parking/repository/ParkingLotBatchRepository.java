@@ -22,10 +22,10 @@ public class ParkingLotBatchRepository {
         jdbcTemplate.batchUpdate(
                 """
                             INSERT INTO PARKING_LOT (
-                            name, address, capacity, weekday_open, weekday_close, weekend_open, weekend_close,
+                            name, address, weekday_open, weekday_close, weekend_open, weekend_close,
                             holiday_open, holiday_close, is_free, weekend_free, holiday_free,
                             latitude, longitude, created_date, created_name, modified_date, modified_name, code
-                            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),'SYSTEM',NOW(),'SYSTEM',?)
+                            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),'SYSTEM',NOW(),'SYSTEM',?)
                             ON DUPLICATE KEY UPDATE code=code 
                         """,
                 new BatchPreparedStatementSetter() {
@@ -46,7 +46,7 @@ public class ParkingLotBatchRepository {
         jdbcTemplate.batchUpdate(
                 """
                             UPDATE PARKING_LOT SET
-                            name=?, address=?, capacity=?, weekday_open=?, weekday_close=?, weekend_open=?, weekend_close=?,
+                            name=?, address=?, weekday_open=?, weekday_close=?, weekend_open=?, weekend_close=?,
                             holiday_open=?, holiday_close=?, is_free=?, weekend_free=?, holiday_free=?, 
                             latitude=?, longitude=?, modified_date=NOW(), modified_name='SYSTEM'
                             where code=?
@@ -68,18 +68,17 @@ public class ParkingLotBatchRepository {
     private void setStatement(PreparedStatement ps, ParkingLot parkingLot) throws SQLException {
         ps.setString(1, parkingLot.getName());
         ps.setString(2, parkingLot.getAddress());
-        ps.setInt(3, parkingLot.getCapacity());
-        ps.setString(4, parkingLot.getWeekdayOpen());
-        ps.setString(5, parkingLot.getWeekdayClose());
-        ps.setString(6, parkingLot.getWeekendOpen());
-        ps.setString(7, parkingLot.getWeekendClose());
-        ps.setString(8, parkingLot.getHolidayOpen());
-        ps.setString(9, parkingLot.getHolidayClose());
-        ps.setBoolean(10, parkingLot.getIsFree());
-        ps.setBoolean(11, parkingLot.getWeekendFree());
-        ps.setBoolean(12, parkingLot.getHolidayFree());
-        ps.setBigDecimal(13, parkingLot.getLatitude());
-        ps.setBigDecimal(14, parkingLot.getLongitude());
-        ps.setString(15, parkingLot.getCode());
+        ps.setString(3, parkingLot.getWeekdayOpen());
+        ps.setString(4, parkingLot.getWeekdayClose());
+        ps.setString(5, parkingLot.getWeekendOpen());
+        ps.setString(6, parkingLot.getWeekendClose());
+        ps.setString(7, parkingLot.getHolidayOpen());
+        ps.setString(8, parkingLot.getHolidayClose());
+        ps.setBoolean(9, parkingLot.getIsFree());
+        ps.setBoolean(10, parkingLot.getWeekendFree());
+        ps.setBoolean(11, parkingLot.getHolidayFree());
+        ps.setBigDecimal(12, parkingLot.getLatitude());
+        ps.setBigDecimal(13, parkingLot.getLongitude());
+        ps.setString(14, parkingLot.getCode());
     }
 }

@@ -23,11 +23,11 @@ public class ParkingLotDetailBatchRepository {
         jdbcTemplate.batchUpdate(
                 """
                             INSERT INTO PARKING_LOT_DETAIL (
-                            type_code, type_name, operation_code, operation_name,
+                            capacity, type_code, type_name, operation_code, operation_name,
                             tel, last_sync, real_time_info, real_time_info_description,
                             night_open, is_night_free,
                             created_date, created_name, modified_date, modified_name, code
-                            ) VALUES (?,?,?,?,?,?,?,?,?,?,NOW(),'SYSTEM',NOW(),'SYSTEM',?)
+                            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,NOW(),'SYSTEM',NOW(),'SYSTEM',?)
                             ON DUPLICATE KEY UPDATE code=code 
                         """,
                 new BatchPreparedStatementSetter() {
@@ -48,7 +48,7 @@ public class ParkingLotDetailBatchRepository {
         jdbcTemplate.batchUpdate(
                 """
                             UPDATE PARKING_LOT_DETAIL SET
-                            type_code=?, type_name=?, operation_code=?, operation_name=?,
+                            capacity=?, type_code=?, type_name=?, operation_code=?, operation_name=?,
                             tel=?, last_sync=?, real_time_info=?, real_time_info_description=?,
                             night_open=?, is_night_free=?, modified_date=NOW(), modified_name='SYSTEM'
                             where code=?
@@ -68,16 +68,17 @@ public class ParkingLotDetailBatchRepository {
     }
 
     private void setStatement(PreparedStatement ps, ParkingLotDetail parkingLotDetail) throws SQLException {
-        ps.setString(1, parkingLotDetail.getTypeCode());
-        ps.setString(2, parkingLotDetail.getTypeName());
-        ps.setInt(3, parkingLotDetail.getOperationCode());
-        ps.setString(4, parkingLotDetail.getOperationName());
-        ps.setString(5, parkingLotDetail.getTel());
-        ps.setTimestamp(6, Timestamp.valueOf(parkingLotDetail.getLastSync()));
-        ps.setInt(7, parkingLotDetail.getRealTimeInfo());
-        ps.setString(8, parkingLotDetail.getRealTimeInfoDescription());
-        ps.setString(9, parkingLotDetail.getNightOpen());
-        ps.setBoolean(10, parkingLotDetail.getIsNightFree());
-        ps.setString(11, parkingLotDetail.getCode());
+        ps.setInt(1, parkingLotDetail.getCapacity());
+        ps.setString(2, parkingLotDetail.getTypeCode());
+        ps.setString(3, parkingLotDetail.getTypeName());
+        ps.setInt(4, parkingLotDetail.getOperationCode());
+        ps.setString(5, parkingLotDetail.getOperationName());
+        ps.setString(6, parkingLotDetail.getTel());
+        ps.setTimestamp(7, Timestamp.valueOf(parkingLotDetail.getLastSync()));
+        ps.setInt(8, parkingLotDetail.getRealTimeInfo());
+        ps.setString(9, parkingLotDetail.getRealTimeInfoDescription());
+        ps.setString(10, parkingLotDetail.getNightOpen());
+        ps.setBoolean(11, parkingLotDetail.getIsNightFree());
+        ps.setString(12, parkingLotDetail.getCode());
     }
 }

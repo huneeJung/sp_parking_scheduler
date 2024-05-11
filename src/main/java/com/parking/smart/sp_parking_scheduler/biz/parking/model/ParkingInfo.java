@@ -133,7 +133,6 @@ public class ParkingInfo {
                 .code(code)
                 .name(name)
                 .address(address)
-                .capacity(capacity)
                 .weekdayOpen(weekdayOpen)
                 .weekdayClose(weekdayClose)
                 .weekendOpen(weekendOpen)
@@ -153,6 +152,7 @@ public class ParkingInfo {
         LocalDateTime syncTime = StringUtils.isBlank(lastSyncTime) ? null : LocalDateTime.parse(lastSyncTime, formatter);
         return ParkingLotDetail.builder()
                 .code(code)
+                .capacity(capacity)
                 .typeCode(typeCode)
                 .typeName(typeName)
                 .operationCode(operationCode)
