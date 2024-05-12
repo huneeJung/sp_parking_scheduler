@@ -145,6 +145,7 @@ public class ParkingInfo {
                 .latitude(StringUtils.isBlank(lat) ? ZERO : new BigDecimal(lat))
                 .longitude(StringUtils.isBlank(lng) ? ZERO : new BigDecimal(lng))
                 .build();
+
     }
 
     public ParkingLotDetail toParkingLotDetail() {
