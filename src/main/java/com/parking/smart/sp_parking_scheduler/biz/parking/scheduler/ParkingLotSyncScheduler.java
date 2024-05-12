@@ -85,7 +85,7 @@ public class ParkingLotSyncScheduler {
         log.info("ParkingLot Synchronize End ::: totalCount {} ::: workTime {}ms", totalCount, workingTime);
     }
 
-    public void updateParkingLots(List<ParkingInfo> parkingInfoList) {
+    private void updateParkingLots(List<ParkingInfo> parkingInfoList) {
 
         var updateLotList = new ArrayList<ParkingLot>();
         var updateLotDetailList = new ArrayList<ParkingLotDetail>();
