@@ -14,6 +14,9 @@ spring:
       idle-timeout: 600000
       connection-timeout: 30000
       max-lifetime: 1800000
+  batch:
+    jdbc:
+      initialize-schema: always
   ## Hibernate
   jpa:
     open-in-view: true
