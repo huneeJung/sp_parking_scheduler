@@ -54,6 +54,7 @@ public class HolidayScheduler {
         var body = response.getBody();
         if (response.getStatusCode().value() != 200 || body == null || body.get("response") == null) {
             log.info("Holiday OpenAPI Request Failed ::: requestUrl {}", requestUrl);
+            throw new RuntimeException("Holiday OpenAPI Request Failed ::: requestUrl " + requestUrl);
         }
 
         var bodyResponse = (Map<String, Object>) body.get("response");
